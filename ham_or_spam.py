@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[160]:
-
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -20,24 +14,18 @@ from sklearn.naive_bayes import MultinomialNB
 
 from sklearn.pipeline import Pipeline
 
-
-# In this tutorial we will carry out classification task, in which we will train a model to detect spam texts from our text dataset using skearn framework. We will carry out such task by reading the dataset with Pandas library and data visualization using Matplotlib before training a few models in order to select the best performing model.
-# 
-# Few EDA steps to be applied out includes converting the data labels type into integers, implement Word Embeddings or Word vectorization on the training data and splitting out dataset for training and validation set. These process helps the model to perform better.
-
-# In[2]:
-
+"""
+In this tutorial we will carry out classification task, in which we will train a model to detect spam texts from our text dataset using skearn framework. 
+We will carry out such task by reading the dataset with Pandas library and data visualization using Matplotlib before training a few models in order to select the best performing model.
+Few EDA steps to be applied out includes converting the data labels type into integers, 
+implement Word Embeddings or Word vectorization on the training data and splitting out dataset for training and validation set. 
+These process helps the model to perform better.
+"""
 
 df = pd.read_csv("../NLP/UPDATED_NLP_COURSE/TextFiles/smsspamcollection.tsv", sep="\t")
 
 
-# In[3]:
-
-
 df.head()
-
-
-# In[10]:
 
 
 " EDA process to understand the data"
@@ -45,9 +33,6 @@ print(df.isnull().sum())
 print(len(df))
 
 print(df["label"].unique())
-
-
-# In[27]:
 
 
 bins = 1.20**(np.arange(0,50))
@@ -58,24 +43,12 @@ plt.xscale("log")
 plt.show()
 
 
-# In[35]:
-
-
 bins = 1.20**(np.arange(0,50))
 plt.hist(df[df["label"] == "ham"]["punct"], bins=bins)
 plt.hist(df[df["label"] == "spam"]["punct"], bins=bins)
 plt.legend(["ham", "spam"])
 plt.xscale("log")
 plt.show()
-
-
-# In[69]:
-
-
-
-
-
-# In[124]:
 
 
 print(df["label"].value_counts())
@@ -86,10 +59,6 @@ print(df["label"].value_counts())
 """ The Dataset is not balanced as there are far more ham labels than spam. Therefore we will not rely on accuracy score of the model. Other scoring metrics will
 be used in order to have a better feel of how the model is truly performing. These metrics are Confusion Metrix and Classification Report."""
 
-
-# In[134]:
-
-
 X = df["message"]
 y = df["label"]
 
@@ -99,14 +68,8 @@ y = le.fit_transform(y)
 classes = ["ham", "spam"]
 
 
-# In[102]:
-
-
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, 
                                                     random_state=101)
-
-
-# In[103]:
 
 
 tfidf_vect = TfidfVectorizer()
@@ -116,15 +79,12 @@ X_test_tfidf = tfidf_vect.transform(X_test)
 X_train_tfidf
 
 
-# In[104]:
 
 
 model = {"svc": LinearSVC(),
         "r_forrest": RandomForestClassifier(),
         "nbm": MultinomialNB()}
 
-
-# In[107]:
 
 
 def train_model(model, X_train, y_train, X_test, y_test):
@@ -146,13 +106,7 @@ def train_model(model, X_train, y_train, X_test, y_test):
         
 
 
-# In[108]:
-
-
 train_model(model, X_train_tfidf,y_train, X_test_tfidf, y_test)
-
-
-# In[121]:
 
 
 # Pipeline allows us to carry out all preprocessing and train steps together, this helps to improve inference time on unseen data.
@@ -160,56 +114,41 @@ train_model(model, X_train_tfidf,y_train, X_test_tfidf, y_test)
 classifier_pipe = Pipeline(steps=[("tfidf_vect", TfidfVectorizer()),("model", LinearSVC())])
 
 
-# In[122]:
-
-
 classifier_pipe.fit(X_train,y_train)
 
 prediction = classifier_pipe.predict(X_test)
 
 
-# In[132]:
-
-
 print(confusion_matrix(y_test,prediction))
 
 
-# In[131]:
-
+    [[976      4]
+     [ 13    122]]
+   
+  
 
 print(classification_report(y_test, prediction))
 
 
-# In[164]:
+              precision    recall  f1-score   support
+
+           0       0.99      1.00      0.99       980
+           1       0.97      0.90      0.93       135
+
+   micro avg       0.98      0.98      0.98      1115
+   macro avg       0.98      0.95      0.96      1115
+weighted avg       0.98      0.98      0.98      1115
 
 
 # Testing 
 
 print(classes[int(classifier_pipe.predict(["50% off"]))])
 
-
-# In[163]:
+# Spam
 
 
 print(classes[int(classifier_pipe.predict(["Its a happy day"]))])
 
-
-# In[158]:
-
-
-
-
-
-# 
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
+# Ham
 
 
