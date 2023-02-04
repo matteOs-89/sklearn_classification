@@ -18,7 +18,7 @@ from sklearn.pipeline import Pipeline
 In this tutorial we will carry out classification task, in which we will train a model to detect spam texts from our text dataset using skearn framework. 
 We will carry out such task by reading the dataset with Pandas library and data visualization using Matplotlib before training a few models in order to select the best performing model.
 Few EDA steps to be applied out includes converting the data labels type into integers, 
-implement Word Embeddings or Word vectorization on the training data and splitting out dataset for training and validation set. 
+implement TF IDF Vectorization on the training data and splitting out dataset for training and validation set. 
 These process helps the model to perform better.
 """
 
